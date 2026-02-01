@@ -1,9 +1,15 @@
 import React from 'react';
 import QRCode from 'qrcode.react';
 
+// Shopkeeper portal URL - update for production
+const SHOPKEEPER_URL = import.meta.env.VITE_SHOPKEEPER_URL || 'https://cloudv2-46qq.vercel.app';
+
 export function SessionSuccess({ sessionId, expiresAt, files }) {
   const expiresDate = new Date(expiresAt);
   const expiresIn = Math.floor((expiresAt - Date.now()) / 1000 / 60);
+
+  // QR code leads directly to shopkeeper portal with session ID
+  const qrUrl = `${SHOPKEEPER_URL}?session=${sessionId}`;
 
   return (
     <div className="success-container">
@@ -33,10 +39,10 @@ export function SessionSuccess({ sessionId, expiresAt, files }) {
         </div>
 
         <div className="qr-section">
-          <p>Share this QR code with the shopkeeper:</p>
+          <p>Shopkeeper: Scan this QR to view and print files</p>
           <div className="qr-container">
             <QRCode 
-              value={`${window.location.origin}/shopkeeper-login?id=${sessionId}`}
+              value={qrUrl}
               size={200}
               level="H"
               includeMargin={true}

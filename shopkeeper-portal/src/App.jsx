@@ -1,10 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SessionViewer from './components/SessionViewer';
 import './App.css';
 
 function App() {
   const [sessionId, setSessionId] = useState('');
   const [activeSession, setActiveSession] = useState(null);
+
+  // Check for session ID in URL on load (from QR code)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionFromUrl = urlParams.get('session');
+    
+    if (sessionFromUrl && /^[A-Z0-9]{6}$/i.test(sessionFromUrl)) {
+      setActiveSession(sessionFromUrl.toUpperCase());
+      // Clean URL without reloading
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   const handleLogin = (e) => {
     e.preventDefault();

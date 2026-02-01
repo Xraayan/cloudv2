@@ -10,6 +10,7 @@ function SessionViewer({ sessionId, onBack }) {
   const [currentFile, setCurrentFile] = useState(null);
   const [viewerContent, setViewerContent] = useState(null);
   const [completed, setCompleted] = useState(false);
+  const [isBlurred, setIsBlurred] = useState(false);
   const pdfCanvasRef = useRef(null);
   const currentFileUrlRef = useRef(null);
 
@@ -22,33 +23,88 @@ function SessionViewer({ sessionId, onBack }) {
       return false;
     };
     
-    // Disable keyboard shortcuts
+    // Disable keyboard shortcuts including print
     const handleKeyDown = (e) => {
+      // Block Ctrl+P (Print)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+        e.preventDefault();
+        alert('Printing via keyboard is disabled. Use the Print button.');
+        return false;
+      }
+      // Block Ctrl+S (Save)
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
         alert('Saving files is disabled for security reasons.');
         return false;
       }
+      // Block PrintScreen
+      if (e.key === 'PrintScreen') {
+        e.preventDefault();
+        navigator.clipboard.writeText('');
+        alert('Screenshots are disabled for security reasons.');
+        return false;
+      }
+      // Block F12
       if (e.key === 'F12') {
         e.preventDefault();
         return false;
       }
+      // Block Ctrl+Shift+I (DevTools)
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') {
         e.preventDefault();
         return false;
       }
+      // Block Ctrl+Shift+S (Screenshot tools)
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'S') {
+        e.preventDefault();
+        return false;
+      }
+      // Block Ctrl+U (View source)
       if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
         e.preventDefault();
         return false;
       }
     };
+
+    // Blur content when window loses focus (screenshot protection)
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setIsBlurred(true);
+      }
+    };
+
+    const handleWindowBlur = () => {
+      setIsBlurred(true);
+    };
+
+    const handleWindowFocus = () => {
+      // Small delay to prevent flash during normal tab switching
+      setTimeout(() => setIsBlurred(false), 100);
+    };
+
+    // Detect screenshot attempts via window blur
+    const handleKeyUp = (e) => {
+      if (e.key === 'PrintScreen') {
+        navigator.clipboard.writeText('');
+        setIsBlurred(true);
+        setTimeout(() => setIsBlurred(false), 1000);
+      }
+    };
     
     document.addEventListener('contextmenu', handleContextMenu);
     document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('blur', handleWindowBlur);
+    window.addEventListener('focus', handleWindowFocus);
     
     return () => {
       document.removeEventListener('contextmenu', handleContextMenu);
       document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('blur', handleWindowBlur);
+      window.removeEventListener('focus', handleWindowFocus);
     };
   }, [sessionId]);
 
@@ -309,7 +365,23 @@ function SessionViewer({ sessionId, onBack }) {
 
   return (
     <div className="session-page">
-      <div className="session-container">
+      {/* Screenshot protection overlay */}
+      {isBlurred && (
+        <div className="screenshot-blocker">
+          <div className="blocker-content">
+            <div className="blocker-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="48" height="48">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+              </svg>
+            </div>
+            <h2>Content Protected</h2>
+            <p>Screenshots are not allowed</p>
+          </div>
+        </div>
+      )}
+      
+      <div className={`session-container ${isBlurred ? 'blurred' : ''}`}>
         <div className="session-header">
           <h1>CloudTab Shopkeeper</h1>
           <p className="session-subtitle">Secure file viewing and printing</p>

@@ -80,6 +80,7 @@ body {
 
 /* Drag and Drop Zone */
 .drop-zone {
+  display: block;
   border: 2px dashed var(--border-color);
   border-radius: var(--radius-lg);
   padding: 56px 32px;
@@ -87,7 +88,7 @@ body {
   background: white;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-bottom: 20px;
+  margin-bottom: 32px;
 }
 
 .drop-zone:hover,
@@ -127,24 +128,6 @@ body {
 .drop-zone p {
   color: var(--text-muted);
   font-size: 14px;
-}
-
-.browse-label {
-  display: inline-block;
-  background: var(--primary);
-  color: white;
-  padding: 14px 32px;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-weight: 600;
-  margin-bottom: 40px;
-  transition: all 0.2s ease;
-  font-size: 15px;
-}
-
-.browse-label:hover {
-  background: var(--primary-light);
-  box-shadow: var(--shadow-md);
 }
 
 /* Files Section */

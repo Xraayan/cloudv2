@@ -65,7 +65,8 @@ export function FileUpload({ onUpload, isLoading }) {
         <p className="subtitle">Securely upload files for printing at internet cafes</p>
 
         <form onSubmit={handleSubmit}>
-          <div
+          <label
+            htmlFor="file-input"
             className={`drop-zone ${dragActive ? 'active' : ''}`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
@@ -82,19 +83,15 @@ export function FileUpload({ onUpload, isLoading }) {
               </div>
               <h2>Drag & Drop Files Here</h2>
               <p>or click to browse</p>
-              <input
-                type="file"
-                id="file-input"
-                multiple
-                onChange={handleChange}
-                disabled={isLoading}
-                style={{ display: 'none' }}
-              />
             </div>
-          </div>
-
-          <label htmlFor="file-input" className="browse-label">
-            <span>Browse Files</span>
+            <input
+              type="file"
+              id="file-input"
+              multiple
+              onChange={handleChange}
+              disabled={isLoading}
+              style={{ display: 'none' }}
+            />
           </label>
 
           {selectedFiles.length > 0 && (

@@ -4,7 +4,7 @@ import QRCode from 'qrcode.react';
 // Shopkeeper portal URL - update for production
 const SHOPKEEPER_URL = import.meta.env.VITE_SHOPKEEPER_URL || 'https://cloudv2-46qq.vercel.app';
 
-export function SessionSuccess({ sessionId, expiresAt, files }) {
+export function SessionSuccess({ sessionId, expiresAt, files, onUploadMore }) {
   const expiresDate = new Date(expiresAt);
   const expiresIn = Math.floor((expiresAt - Date.now()) / 1000 / 60);
 
@@ -67,7 +67,7 @@ export function SessionSuccess({ sessionId, expiresAt, files }) {
         </div>
 
         <div className="actions">
-          <button className="btn btn-secondary" onClick={() => window.location.href = '/upload'}>
+          <button className="btn btn-secondary" onClick={onUploadMore}>
             Upload More Files
           </button>
         </div>

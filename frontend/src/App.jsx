@@ -24,6 +24,11 @@ function App() {
     }
   };
 
+  const handleUploadMore = () => {
+    setSessionData(null);
+    setError(null);
+  };
+
   return (
     <div className="app">
       {sessionData ? (
@@ -31,6 +36,7 @@ function App() {
           sessionId={sessionData.sessionId}
           expiresAt={sessionData.expiresAt}
           files={sessionData.files}
+          onUploadMore={handleUploadMore}
         />
       ) : (
         <>

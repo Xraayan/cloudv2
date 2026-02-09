@@ -56,6 +56,7 @@ body {
 
 .upload-card {
   width: 100%;
+  text-align: center;
 }
 
 .logo {
@@ -133,6 +134,7 @@ body {
 /* Files Section */
 .files-section {
   margin-bottom: 32px;
+  text-align: left;
 }
 
 .files-section h3 {
@@ -467,6 +469,7 @@ body {
 /* Footer */
 .page-footer {
   margin-top: 48px;
+  text-align: center;
 }
 
 .page-footer p {
@@ -497,6 +500,7 @@ body {
   .feature {
     flex-direction: row;
     text-align: left;
+    justify-content: flex-start;
   }
 
   .detail-row {
